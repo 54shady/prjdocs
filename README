@@ -1,9 +1,54 @@
-## How to use this manifest
+# Repo How To
 
-Init repo
+## basic
+
+初始化仓库
 
 	repo init --repo-url=https://mirrors.tuna.tsinghua.edu.cn/git/git-repo -u https://github.com/54shady/manifests -b master
 
-sync all project code
+一次性下载所有代码
 
 	repo sync
+
+下载指工程代码
+
+	repo sync fabvm
+
+查看指定工程(比如fabvm)代码状态
+
+	repo status fabvm
+
+下载的project默认都是detached的,默认开发流程如下
+
+	cd fabvm
+	git checkout -b debug
+	modify project ...
+	git add ...
+	git commit ...
+
+	git push origin debug:master
+	repo abandon debug fabvm
+
+## about change id
+
+[Change-Id](https://gerrit-review.googlesource.com/Documentation/user-changeid.html)
+
+在git commit时想要添加一些hook信息，比如Change-Id
+
+可以下载一个hook脚本如下然后拷贝到项目的.git/hooks/下
+
+	curl -Lo .git/hooks/commit-msg http://review.example.com/tools/hooks/commit-msg
+	cp commit-msg .git/hooks/
+	chmod +x .git/hooks/commit-msg
+
+repo下的代码现在默认会在每个project目录下有commit-msg(比如下面的fabvm project)
+
+	.repo/project-objects/fabvm.git/hooks/commit-msg
+
+其实所有的project的commit-msg都是repo里的链接
+
+	./.repo/project-objects/fabvm.git/hooks/commit-msg -> ../../../repo/hooks/commit-msg*
+
+不需要的话直接删掉即可
+
+	rm .repo/repo/hooks/commit-msg
