@@ -52,3 +52,33 @@ repo下的代码现在默认会在每个project目录下有commit-msg(比如下�
 不需要的话直接删掉即可
 
 	rm .repo/repo/hooks/commit-msg
+
+## FAQ
+
+1. this operation must be run in a work tree
+
+为了让repo的代码减少磁盘空间,把所有文件都删了,留下.repo,保存在服务器上就行
+后续直接检出代码即可
+
+	repo sync -l
+
+比如下把cts删掉
+
+	rm cts
+
+一般会先通过repo list来查看cts下有哪些工程
+或者直接 repo sync -l 来全部同步整个仓库
+
+现在模拟同步代码,出现(this operation must be run in a work tree)
+
+	repo sync -l cts -j1 --fail-fast
+
+	fatal: this operation must be run in a work tree
+
+需要进入到对应的工程目录(比如这里的cts工程)unset core.bare
+
+	cd cts/
+	git config --unset core.bare
+
+	cd ../
+	repo sync -l cts -j1 --fail-fast
